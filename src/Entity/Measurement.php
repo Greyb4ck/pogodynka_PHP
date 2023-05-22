@@ -65,4 +65,10 @@ class Measurement
 
         return $this;
     }
+    public function __toString()
+    {
+        $date = $this->date->format('d.m.Y');
+        $temp = round($this->celsius);
+        return $date . ": " . $temp . "°C";
+    }
 }

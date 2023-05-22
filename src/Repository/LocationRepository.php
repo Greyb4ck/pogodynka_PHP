@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Location;
+use App\Entity\Measurement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,6 +40,19 @@ class LocationRepository extends ServiceEntityRepository
         }
     }
 
+
+    public function findByCountryAndCity($country, $cityName)
+    {
+        $qb = $this->createQueryBuilder('l');
+        $qb->where('l.name = :cityName')
+            ->setParameter('cityName', $cityName)
+            ->andWhere('l.country = :country')
+            ->setParameter('country', $country);
+
+        $query = $qb->getQuery();
+        $result = $query->getSingleResult();
+        return $result;
+    }
 //    /**
 //     * @return Location[] Returns an array of Location objects
 //     */

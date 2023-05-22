@@ -31,9 +31,13 @@ class Location
     #[ORM\OneToMany(mappedBy: 'location', targetEntity: Measurement::class)]
     private Collection $measurements;
 
+    #[ORM\OneToMany(mappedBy: 'upo', targetEntity: Country::class)]
+    private Collection $countries;
+
     public function __construct()
     {
         $this->measurements = new ArrayCollection();
+        $this->countries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,6 +121,36 @@ class Location
             // set the owning side to null (unless already changed)
             if ($measurement->getLocation() === $this) {
                 $measurement->setLocation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Country>
+     */
+    public function getCountries(): Collection
+    {
+        return $this->countries;
+    }
+
+    public function addCountry(Country $country): self
+    {
+        if (!$this->countries->contains($country)) {
+            $this->countries->add($country);
+            $country->setUpo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCountry(Country $country): self
+    {
+        if ($this->countries->removeElement($country)) {
+            // set the owning side to null (unless already changed)
+            if ($country->getUpo() === $this) {
+                $country->setUpo(null);
             }
         }
 
